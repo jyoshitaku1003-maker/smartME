@@ -61,12 +61,17 @@ circuit:
 - ループを閉じるには line で始点に戻る
 - 並列接続: push で現在位置を保存 → 一方の枝 → pop で位置復元 → もう一方の枝
 
+## 電源の選択ルール
+
+- 「交流」と明示されている場合のみ `source_ac` を使用する
+- それ以外（「直流」「電池」または電源種別の指定なし）は `battery` を使用する
+
 ## 例1: RC直列回路
 
 ```yaml
 title: "RC直列回路"
 circuit:
-  - type: source_ac
+  - type: battery
     label: "V"
     direction: up
   - type: resistor
@@ -84,7 +89,7 @@ circuit:
 ```yaml
 title: "RC並列回路"
 circuit:
-  - type: source_ac
+  - type: battery
     label: "V"
     direction: up
   - type: line
@@ -110,7 +115,7 @@ circuit:
 ```yaml
 title: "RLC直列回路"
 circuit:
-  - type: source_ac
+  - type: battery
     label: "V"
     direction: up
   - type: resistor
@@ -124,6 +129,24 @@ circuit:
     direction: down
   - type: line
     direction: left
+  - type: line
+    direction: left
+```
+
+## 例4: RC直列回路（交流）
+
+```yaml
+title: "RC直列回路（交流）"
+circuit:
+  - type: source_ac
+    label: "V"
+    direction: up
+  - type: resistor
+    label: "R"
+    direction: right
+  - type: capacitor
+    label: "C"
+    direction: down
   - type: line
     direction: left
 ```
