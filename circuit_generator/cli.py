@@ -67,5 +67,41 @@ def list_elements():
     click.echo()
 
 
+@cli.command("symbol-sheet")
+@click.option("--output", "-o", default="symbols.svg", show_default=True)
+def symbol_sheet(output):
+    """全回路素子の記号一覧SVGを生成する"""
+    import schemdraw
+    import schemdraw.elements as elm
+
+    SKIP = {"push", "pop", "dot", "opamp", "transformer", "transistor_npn",
+            "transistor_pnp", "jfet_n", "jfet_p"}
+    keys = [k for k in sorted(ELEMENT_MAP) if k not in SKIP]
+
+    cols = 3
+    col_w = 5.0
+    row_h = 2.5
+    rows = (len(keys) + cols - 1) // cols
+
+    with schemdraw.Drawing(show=False) as d:
+        for i, key in enumerate(keys):
+            col = i % cols
+            row = i // cols
+            x = col * col_w
+            y = -(row * row_h)
+            cls = ELEMENT_MAP[key]
+            try:
+                e = cls().right().length(2.0).label(key, loc="top").label(
+                    ELEMENT_NAMES_JA.get(key, ""), loc="bottom"
+                )
+                d.add(e.at((x, y)))
+            except Exception:
+                pass
+
+        d.save(output)
+
+    click.echo(f"Symbol sheet generated: {output}")
+
+
 if __name__ == "__main__":
     cli()
