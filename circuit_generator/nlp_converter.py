@@ -155,7 +155,92 @@ circuit:
     direction: left
 ```
 
-## 例5: オペアンプ差動増幅回路
+## 例5: 反転増幅回路
+
+オペアンプのアンカー位置（direction: right の場合）:
+- `in1` = 反転入力(−) 座標 (0, 0.625)
+- `in2` = 非反転入力(+) 座標 (0, -0.625)
+- `out` = 出力 座標 (2.165, 0)
+フィードバック経路は in1 から上方向に引き出し、out の真上を経由して out まで戻す。
+縦方向の長さ: in1 から上へ h → out上を通り → 下へ (h + 0.625) で out に到達。
+
+```yaml
+title: "反転増幅回路"
+circuit:
+  - type: opamp
+    id: op1
+    direction: right
+  - type: resistor
+    label: "R1"
+    at: [op1, in1]
+    direction: left
+    length: 2.5
+  - type: line
+    label: "Vin"
+    label_loc: left
+    direction: left
+    length: 0.5
+  - type: line
+    at: [op1, in1]
+    direction: up
+    length: 1.5
+  - type: resistor
+    label: "R2"
+    direction: right
+    length: 2.165
+  - type: line
+    direction: down
+    length: 2.125
+  - type: ground
+    at: [op1, in2]
+  - type: line
+    label: "Vout"
+    label_loc: right
+    at: [op1, out]
+    direction: right
+    length: 1.5
+```
+
+## 例6: 非反転増幅回路
+
+```yaml
+title: "非反転増幅回路"
+circuit:
+  - type: opamp
+    id: op1
+    direction: right
+  - type: line
+    label: "Vin"
+    label_loc: left
+    at: [op1, in2]
+    direction: left
+    length: 1.5
+  - type: resistor
+    label: "R1"
+    at: [op1, in1]
+    direction: down
+    length: 1.5
+  - type: ground
+  - type: line
+    at: [op1, in1]
+    direction: up
+    length: 0.625
+  - type: resistor
+    label: "R2"
+    direction: right
+    length: 2.165
+  - type: line
+    direction: down
+    length: 0.625
+  - type: line
+    label: "Vout"
+    label_loc: right
+    at: [op1, out]
+    direction: right
+    length: 1.5
+```
+
+## 例7: 差動増幅回路
 
 ```yaml
 title: "差動増幅回路"
@@ -165,16 +250,47 @@ circuit:
     direction: right
   - type: resistor
     label: "R1"
-    at: [op1, in2]
-    direction: left
-  - type: resistor
-    label: "R2"
     at: [op1, in1]
     direction: left
-  - type: voltage_diff
+    length: 2.5
+  - type: line
+    label: "V1"
+    label_loc: left
+    direction: left
+    length: 0.5
+  - type: resistor
+    label: "R3"
+    at: [op1, in2]
+    direction: left
+    length: 2.5
+  - type: line
+    label: "V2"
+    label_loc: left
+    direction: left
+    length: 0.5
+  - type: resistor
+    label: "R4"
+    at: [op1, in2]
+    direction: down
+    length: 1.5
+  - type: ground
+  - type: line
+    at: [op1, in1]
+    direction: up
+    length: 1.5
+  - type: resistor
+    label: "R2"
+    direction: right
+    length: 2.165
+  - type: line
+    direction: down
+    length: 2.125
+  - type: line
     label: "Vout"
+    label_loc: right
     at: [op1, out]
     direction: right
+    length: 1.5
 ```
 
 YAMLコードブロック（```yaml ... ```）のみを返してください。説明文は不要です。\
