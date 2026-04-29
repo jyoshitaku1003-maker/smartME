@@ -70,6 +70,12 @@ circuit:
 - 「交流」と明示されている場合のみ `source_ac` を使用する
 - それ以外（「直流」「電池」または電源種別の指定なし）は `battery` を使用する
 
+## Vin / Vout の表現ルール
+
+- Vin・Vout は必ず `voltage_diff` + `ground` の組み合わせで表現する
+- `voltage_diff` を `direction: down` で接続ノードに配置し、直後に `ground` を置く
+- 単なる `label: "Vin"` 付きの line は使わない
+
 ## 例1: RC直列回路
 
 ```yaml
@@ -160,7 +166,7 @@ circuit:
 オペアンプのアンカー位置（direction: right の場合）:
 - `in1` = 反転入力(−) 座標 (0, 0.625)
 - `in2` = 非反転入力(+) 座標 (0, -0.625)
-- `out` = 出力 座標 (2.165, 0)
+- `out` = 出力 座標 (3.415, 0)
 フィードバック経路は in1 から上方向に引き出し、out の真上を経由して out まで戻す。
 縦方向の長さ: in1 から上へ h → out上を通り → 下へ (h + 0.625) で out に到達。
 
@@ -175,11 +181,11 @@ circuit:
     at: [op1, in1]
     direction: left
     length: 2.5
-  - type: line
+  - type: voltage_diff
     label: "Vin"
-    label_loc: left
-    direction: left
-    length: 0.5
+    direction: down
+    length: 1.5
+  - type: ground
   - type: line
     at: [op1, in1]
     direction: up
@@ -193,12 +199,12 @@ circuit:
     length: 2.125
   - type: ground
     at: [op1, in2]
-  - type: line
+  - type: voltage_diff
     label: "Vout"
-    label_loc: right
     at: [op1, out]
-    direction: right
+    direction: down
     length: 1.5
+  - type: ground
 ```
 
 ## 例6: 非反転増幅回路
@@ -210,11 +216,14 @@ circuit:
     id: op1
     direction: right
   - type: line
-    label: "Vin"
-    label_loc: left
     at: [op1, in2]
     direction: left
     length: 1.5
+  - type: voltage_diff
+    label: "Vin"
+    direction: down
+    length: 1.5
+  - type: ground
   - type: resistor
     label: "R1"
     at: [op1, in1]
@@ -232,12 +241,12 @@ circuit:
   - type: line
     direction: down
     length: 0.625
-  - type: line
+  - type: voltage_diff
     label: "Vout"
-    label_loc: right
     at: [op1, out]
-    direction: right
+    direction: down
     length: 1.5
+  - type: ground
 ```
 
 ## 例7: 差動増幅回路
@@ -253,21 +262,21 @@ circuit:
     at: [op1, in1]
     direction: left
     length: 2.5
-  - type: line
+  - type: voltage_diff
     label: "V1"
-    label_loc: left
-    direction: left
-    length: 0.5
+    direction: down
+    length: 1.5
+  - type: ground
   - type: resistor
     label: "R3"
     at: [op1, in2]
     direction: left
     length: 2.5
-  - type: line
+  - type: voltage_diff
     label: "V2"
-    label_loc: left
-    direction: left
-    length: 0.5
+    direction: down
+    length: 1.5
+  - type: ground
   - type: resistor
     label: "R4"
     at: [op1, in2]
@@ -285,11 +294,13 @@ circuit:
   - type: line
     direction: down
     length: 2.125
-  - type: line
+  - type: voltage_diff
     label: "Vout"
-    label_loc: right
     at: [op1, out]
-    direction: right
+    direction: down
+    length: 1.5
+  - type: ground
+```
     length: 1.5
 ```
 
