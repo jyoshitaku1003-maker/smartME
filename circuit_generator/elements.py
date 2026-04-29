@@ -37,12 +37,10 @@ ELEMENT_MAP: dict[str, type] = {
     "resistor":          elm.ResistorIEC,
     "capacitor":         elm.Capacitor,
     "inductor":          elm.Inductor2,
-    "resistor_variable": elm.RBox,
+    "resistor_variable": elm.ResistorVarIEC,
 
     # 電源
-    "source_dc":         elm.SourceV,
     "source_ac":         elm.SourceSin,
-    "source_current":    elm.SourceI,
     "battery":           BatteryCW,
 
     # 半導体
@@ -64,7 +62,6 @@ ELEMENT_MAP: dict[str, type] = {
 
     # 接続・補助
     "ground":            elm.Ground,
-    "ground_signal":     elm.GroundSignal,
     "ground_chassis":    elm.GroundChassis,
     "switch":            elm.Switch,
     "transformer":       elm.Transformer,
@@ -75,7 +72,7 @@ ELEMENT_MAP: dict[str, type] = {
 }
 
 # Optional elements (may not exist in all schemdraw versions)
-for _name, _attr in [("fuse", "Fuse"), ("lamp", "Lamp")]:
+for _name, _attr in [("fuse", "Fuse")]:
     _cls = getattr(elm, _attr, None)
     if _cls is not None:
         ELEMENT_MAP[_name] = _cls
@@ -85,9 +82,7 @@ ELEMENT_NAMES_JA: dict[str, str] = {
     "capacitor":         "コンデンサ (C)",
     "inductor":          "コイル・インダクタ (L)",
     "resistor_variable": "可変抵抗",
-    "source_dc":         "直流電圧源",
     "source_ac":         "交流電源（正弦波）",
-    "source_current":    "電流源 (I)",
     "battery":           "電池・単セル (E)",
     "diode":             "ダイオード (D)",
     "zener":             "ツェナーダイオード",
@@ -103,11 +98,9 @@ ELEMENT_NAMES_JA: dict[str, str] = {
     "ammeter":           "電流計 (A)",
     "voltmeter":         "電圧計 (V)",
     "ground":            "アース・接地 (GND)",
-    "ground_signal":     "シグナルアース",
     "ground_chassis":    "シャーシアース",
     "switch":            "スイッチ (SW)",
     "fuse":              "ヒューズ",
-    "lamp":              "電球・ランプ",
     "transformer":       "変圧器・トランス (T)",
     "line":              "配線",
     "dot":               "接続点（ジャンクション）",
