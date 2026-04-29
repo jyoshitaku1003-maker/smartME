@@ -71,6 +71,10 @@ def yaml_to_svg(
     output_path: Union[str, Path, None] = None,
 ) -> str:
     """Load a YAML circuit file and render it to SVG."""
-    with open(yaml_path, encoding="utf-8") as f:
-        data = yaml.safe_load(f)
+    try:
+        with open(yaml_path, encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+    except UnicodeDecodeError:
+        with open(yaml_path, encoding="cp932") as f:
+            data = yaml.safe_load(f)
     return circuit_to_svg(data, output_path)
