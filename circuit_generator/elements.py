@@ -17,7 +17,7 @@ class BatteryCW(Element2Term):
 # Maps YAML type names → schemdraw element classes
 ELEMENT_MAP: dict[str, type] = {
     # 受動素子
-    "resistor":          elm.Resistor,
+    "resistor":          elm.ResistorIEC,
     "capacitor":         elm.Capacitor,
     "inductor":          elm.Inductor2,
     "resistor_variable": elm.RBox,
