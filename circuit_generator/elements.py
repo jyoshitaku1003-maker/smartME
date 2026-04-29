@@ -72,7 +72,7 @@ ELEMENT_MAP: dict[str, type] = {
     "mosfet_p":          elm.PMos,
     "jfet_n":            elm.JFetN,
     "jfet_p":            elm.JFetP,
-    "opamp":             elm.Opamp,
+    "opamp":             lambda **kw: elm.Opamp(leads=True, **kw),
 
     # 計測器
     "ammeter":           elm.MeterA,

@@ -187,7 +187,7 @@ circuit:
   - type: resistor
     label: "R2"
     direction: right
-    length: 2.165
+    length: 3.415
   - type: line
     direction: down
     length: 2.125
@@ -228,7 +228,7 @@ circuit:
   - type: resistor
     label: "R2"
     direction: right
-    length: 2.165
+    length: 3.415
   - type: line
     direction: down
     length: 0.625
@@ -281,7 +281,7 @@ circuit:
   - type: resistor
     label: "R2"
     direction: right
-    length: 2.165
+    length: 3.415
   - type: line
     direction: down
     length: 2.125
