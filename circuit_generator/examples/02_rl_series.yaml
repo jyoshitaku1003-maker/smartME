@@ -1,0 +1,14 @@
+title: "RL直列回路"
+description: "抵抗とコイルの直列接続。電流の過渡応答・ハイパスフィルタの基本回路。"
+circuit:
+  - type: source_ac
+    label: "V"
+    direction: up
+  - type: resistor
+    label: "R"
+    direction: right
+  - type: inductor
+    label: "L"
+    direction: down
+  - type: line
+    direction: left

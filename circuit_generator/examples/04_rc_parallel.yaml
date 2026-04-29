@@ -1,0 +1,26 @@
+title: "RC並列回路"
+description: "抵抗とコンデンサの並列接続。並列共振・ハイパスフィルタの基本回路。"
+circuit:
+  # 電圧源（左辺）
+  - type: source_ac
+    label: "V"
+    direction: up
+  # 上辺（分岐点まで）
+  - type: line
+    direction: right
+  # --- 並列枝1: 抵抗 ---
+  - type: push
+  - type: resistor
+    label: "R"
+    direction: down
+  - type: line
+    direction: left
+  - type: pop
+  # --- 並列枝2: コンデンサ ---
+  - type: line
+    direction: right
+  - type: capacitor
+    label: "C"
+    direction: down
+  - type: line
+    direction: left

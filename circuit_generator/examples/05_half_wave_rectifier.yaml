@@ -1,0 +1,14 @@
+title: "半波整流回路"
+description: "ダイオードを使った半波整流回路。交流を一方向の脈流に変換する。"
+circuit:
+  - type: source_ac
+    label: "V"
+    direction: up
+  - type: diode
+    label: "D"
+    direction: right
+  - type: resistor
+    label: "R_L"
+    direction: down
+  - type: line
+    direction: left

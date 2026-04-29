@@ -1,0 +1,14 @@
+title: "RC直列回路"
+description: "抵抗とコンデンサの直列接続。過渡応答・ローパスフィルタの基本回路。"
+circuit:
+  - type: source_ac
+    label: "V"
+    direction: up
+  - type: resistor
+    label: "R"
+    direction: right
+  - type: capacitor
+    label: "C"
+    direction: down
+  - type: line
+    direction: left

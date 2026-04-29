@@ -1,0 +1,19 @@
+title: "RLC直列回路"
+description: "抵抗・コイル・コンデンサの直列接続。直列共振回路。共振周波数 f0 = 1/(2π√LC)。"
+circuit:
+  - type: source_ac
+    label: "V"
+    direction: up
+  - type: resistor
+    label: "R"
+    direction: right
+  - type: inductor
+    label: "L"
+    direction: right
+  - type: capacitor
+    label: "C"
+    direction: down
+  - type: line
+    direction: left
+  - type: line
+    direction: left

@@ -1,0 +1,4 @@
+schemdraw>=0.19
+anthropic>=0.40
+pyyaml>=6.0
+click>=8.0
