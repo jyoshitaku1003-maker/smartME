@@ -14,6 +14,20 @@ class BatteryCW(Element2Term):
         self.segments.append(Segment([(batw, bat1), (batw, -bat1)]))  # long = positive
 
 
+_tick = 0.2  # open-terminal tick length
+
+
+class VoltageDiff(Element2Term):
+    """Voltage annotation: open terminals at each end with an arrow in between.
+    Positive terminal (arrowhead) at end, negative at start."""
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.segments.append(Segment([(0, 0), (3.0, 0)],
+                                     arrow='->', arrowwidth=0.18, arrowlength=0.3))
+        self.segments.append(Segment([(0, -_tick), (0, _tick)]))    # negative terminal tick
+        self.segments.append(Segment([(3.0, -_tick), (3.0, _tick)]))  # positive terminal tick
+
+
 # Maps YAML type names → schemdraw element classes
 ELEMENT_MAP: dict[str, type] = {
     # 受動素子
@@ -52,6 +66,7 @@ ELEMENT_MAP: dict[str, type] = {
     "line":              elm.Line,
     "dot":               elm.Dot,
     "arrow":             elm.Arrow,
+    "voltage_diff":      VoltageDiff,
 }
 
 # Optional elements (may not exist in all schemdraw versions)
@@ -90,4 +105,5 @@ ELEMENT_NAMES_JA: dict[str, str] = {
     "line":              "配線",
     "dot":               "接続点（ジャンクション）",
     "arrow":             "矢印",
+    "voltage_diff":      "電位差・電圧表記 (V)",
 }

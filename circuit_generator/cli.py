@@ -72,16 +72,17 @@ def list_elements():
 def symbol_sheet(output):
     """全回路素子の記号一覧SVGを生成する"""
     import schemdraw
-    import schemdraw.elements as elm
+    import schemdraw.elements as _elm
 
-    SKIP = {"push", "pop", "dot", "opamp", "transformer", "transistor_npn",
-            "transistor_pnp", "jfet_n", "jfet_p"}
+    # 単端子・特殊素子は別処理
+    SINGLE_TERMINAL = {"ground", "ground_signal", "ground_chassis", "dot"}
+    SKIP = {"push", "pop", "line", "transformer",
+            "transistor_npn", "transistor_pnp", "jfet_n", "jfet_p"}
     keys = [k for k in sorted(ELEMENT_MAP) if k not in SKIP]
 
     cols = 3
-    col_w = 5.0
-    row_h = 2.5
-    rows = (len(keys) + cols - 1) // cols
+    col_w = 6.0
+    row_h = 3.0
 
     with schemdraw.Drawing(show=False) as d:
         for i, key in enumerate(keys):
@@ -90,11 +91,17 @@ def symbol_sheet(output):
             x = col * col_w
             y = -(row * row_h)
             cls = ELEMENT_MAP[key]
+            name_ja = ELEMENT_NAMES_JA.get(key, "")
             try:
-                e = cls().right().length(2.0).label(key, loc="top").label(
-                    ELEMENT_NAMES_JA.get(key, ""), loc="bottom"
-                )
-                d.add(e.at((x, y)))
+                if key == "opamp":
+                    e = cls().right().at((x, y)).label(key, loc="top").label(name_ja, loc="bottom")
+                    d.add(e)
+                elif key in SINGLE_TERMINAL:
+                    e = cls().at((x, y)).label(key, loc="top").label(name_ja, loc="right")
+                    d.add(e)
+                else:
+                    e = cls().right().length(2.5).at((x, y)).label(key, loc="top").label(name_ja, loc="bottom")
+                    d.add(e)
             except Exception:
                 pass
 
