@@ -46,19 +46,42 @@ def circuit_to_svg(
     output_path: Union[str, Path, None] = None,
 ) -> str:
     """Render a circuit dict to an SVG string (and optionally save to file)."""
+    named: dict[str, object] = {}  # id → added schemdraw element
+
     with schemdraw.Drawing() as d:
         for item in data.get("circuit", []):
             t = item.get("type", "")
             if t == "push":
                 d.push()
+                continue
             elif t == "pop":
                 d.pop()
+                continue
             elif t == "dot":
-                d.add(elm.Dot())
-            elif t in ELEMENT_MAP:
+                added = d.add(elm.Dot())
+            elif t not in ELEMENT_MAP:
+                continue
+            else:
                 elem = _build_element(item)
-                if elem is not None:
-                    d.add(elem)
+                if elem is None:
+                    continue
+
+                # at: [element_id, anchor] — start this element from a named anchor
+                at = item.get("at")
+                if at and isinstance(at, list) and len(at) == 2:
+                    ref_id, anchor = at
+                    ref_elem = named.get(ref_id)
+                    if ref_elem is not None:
+                        elem = elem.at(getattr(ref_elem, anchor))
+                    else:
+                        warnings.warn(f"Unknown element id: {ref_id!r}")
+
+                added = d.add(elem)
+
+            # Register named elements
+            elem_id = item.get("id")
+            if elem_id:
+                named[elem_id] = added
 
     if output_path:
         d.save(str(output_path))

@@ -50,9 +50,11 @@ title: "回路名"
 description: "説明（任意）"
 circuit:
   - type: [素子タイプ]   # 必須
+    id: "名前"           # 任意: 後から参照するための識別子
     label: "ラベル"      # 任意
     direction: right     # up / down / left / right（デフォルト: right）
     length: 3            # 任意（デフォルト: 3）
+    at: [element_id, anchor]  # 任意: 指定素子のアンカーから開始
 ```
 
 ## 描画ルール
@@ -60,6 +62,8 @@ circuit:
 - 各素子は前の素子の終端から連続して描画される（直列接続）
 - ループを閉じるには line で始点に戻る
 - 並列接続: push で現在位置を保存 → 一方の枝 → pop で位置復元 → もう一方の枝
+- オペアンプのアンカー: `in1`（−入力）、`in2`（＋入力）、`out`（出力）
+- `at: [id, anchor]` で任意のアンカーから配線を引き出せる
 
 ## 電源の選択ルール
 
@@ -149,6 +153,28 @@ circuit:
     direction: down
   - type: line
     direction: left
+```
+
+## 例5: オペアンプ差動増幅回路
+
+```yaml
+title: "差動増幅回路"
+circuit:
+  - type: opamp
+    id: op1
+    direction: right
+  - type: resistor
+    label: "R1"
+    at: [op1, in2]
+    direction: left
+  - type: resistor
+    label: "R2"
+    at: [op1, in1]
+    direction: left
+  - type: voltage_diff
+    label: "Vout"
+    at: [op1, out]
+    direction: right
 ```
 
 YAMLコードブロック（```yaml ... ```）のみを返してください。説明文は不要です。\
