@@ -33,20 +33,20 @@ class ZenerSingle(Element2Term):
 
 
 _r = 0.18   # open-circle radius
-_len = 3.0  # total element length
+_len = 2.0  # total element length
 
 
 class VoltageDiff(Element2Term):
-    """Voltage annotation: white open circles at each end with an arrow between them.
-    Arrow points toward positive terminal (end)."""
+    """Voltage terminal: one open circle at start only, arrow toward end.
+    Circle drawn with high zorder to cover the incoming wire.
+    Connect as: (circuit) → voltage_diff → line → ground."""
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        # Arrow line between the two circles (with gap so it doesn't overlap circles)
-        self.segments.append(Segment([(_r, 0), (_len - _r, 0)],
+        # Arrow from circle edge to end
+        self.segments.append(Segment([(_r, 0), (_len, 0)],
                                      arrow='->', arrowwidth=0.18, arrowlength=0.3))
-        # Open circles at each terminal
-        self.segments.append(SegmentCircle((0, 0), _r, fill='white'))
-        self.segments.append(SegmentCircle((_len, 0), _r, fill='white'))
+        # Single open circle at start terminal only, on top of incoming wire
+        self.segments.append(SegmentCircle((0, 0), _r, fill='white', zorder=4))
 
 
 # Maps YAML type names → schemdraw element classes

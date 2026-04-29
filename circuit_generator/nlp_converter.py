@@ -72,8 +72,10 @@ circuit:
 
 ## Vin / Vout の表現ルール
 
-- Vin・Vout は必ず `voltage_diff` + `ground` の組み合わせで表現する
-- `voltage_diff` を `direction: down` で接続ノードに配置し、直後に `ground` を置く
+- Vin・Vout は必ず `voltage_diff` → `line` → `ground` の3点セットで表現する
+- `voltage_diff` を `direction: down` で接続ノードに配置する
+- 直後に短い `line (direction: down, length: 0.5)` を置く
+- さらに `ground` を置く
 - 単なる `label: "Vin"` 付きの line は使わない
 
 ## 例1: RC直列回路
@@ -185,6 +187,9 @@ circuit:
     label: "Vin"
     direction: down
     length: 1.5
+  - type: line
+    direction: down
+    length: 0.5
   - type: ground
   - type: line
     at: [op1, in1]
@@ -204,6 +209,9 @@ circuit:
     at: [op1, out]
     direction: down
     length: 1.5
+  - type: line
+    direction: down
+    length: 0.5
   - type: ground
 ```
 
@@ -223,6 +231,9 @@ circuit:
     label: "Vin"
     direction: down
     length: 1.5
+  - type: line
+    direction: down
+    length: 0.5
   - type: ground
   - type: resistor
     label: "R1"
@@ -246,6 +257,9 @@ circuit:
     at: [op1, out]
     direction: down
     length: 1.5
+  - type: line
+    direction: down
+    length: 0.5
   - type: ground
 ```
 
@@ -266,6 +280,9 @@ circuit:
     label: "V1"
     direction: down
     length: 1.5
+  - type: line
+    direction: down
+    length: 0.5
   - type: ground
   - type: resistor
     label: "R3"
@@ -276,6 +293,9 @@ circuit:
     label: "V2"
     direction: down
     length: 1.5
+  - type: line
+    direction: down
+    length: 0.5
   - type: ground
   - type: resistor
     label: "R4"
@@ -299,6 +319,9 @@ circuit:
     at: [op1, out]
     direction: down
     length: 1.5
+  - type: line
+    direction: down
+    length: 0.5
   - type: ground
 ```
     length: 1.5
