@@ -1,7 +1,8 @@
 import schemdraw.elements as elm
 from schemdraw.elements.elements import Element2Term, gap
+from schemdraw.elements.twoterm import resheight
 from schemdraw.elements.sources import batw, bat1, bat2
-from schemdraw.segments import Segment, SegmentCircle
+from schemdraw.segments import Segment, SegmentCircle, SegmentPoly
 
 
 class BatteryCW(Element2Term):
@@ -12,6 +13,23 @@ class BatteryCW(Element2Term):
         self.segments.append(Segment([(0, 0), gap, (batw, 0)]))
         self.segments.append(Segment([(0, bat2), (0, -bat2)]))    # short = negative
         self.segments.append(Segment([(batw, bat1), (batw, -bat1)]))  # long = positive
+
+
+_cx = resheight * 1.4   # cathode x position (same as schemdraw Diode)
+_bend = resheight * 0.6  # right-angle bend length
+
+
+class ZenerSingle(Element2Term):
+    """Zener diode: cathode bar with one right-angle bend at the bottom only."""
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Lead lines and cathode bar (same as Diode)
+        self.segments.append(Segment([(0, 0), gap, (_cx, resheight),
+                                      (_cx, -resheight), gap, (_cx, 0)]))
+        # Diode triangle
+        self.segments.append(SegmentPoly([(0, resheight), (_cx, 0), (0, -resheight)]))
+        # Single right-angle bend at bottom of cathode bar
+        self.segments.append(Segment([(_cx, -resheight), (_cx - _bend, -resheight)]))
 
 
 _r = 0.18   # open-circle radius
@@ -45,7 +63,7 @@ ELEMENT_MAP: dict[str, type] = {
 
     # 半導体
     "diode":             elm.Diode,
-    "zener":             elm.Zener,
+    "zener":             ZenerSingle,
     "led":               elm.LED,
     "photodiode":        elm.Photodiode,
     "transistor_npn":    elm.BjtNpn,
