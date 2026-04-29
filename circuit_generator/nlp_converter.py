@@ -1,17 +1,14 @@
-"""Natural language → YAML circuit description (via Claude API) → SVG"""
+"""Natural language → YAML circuit description (via OpenAI API) → SVG"""
 
 import re
 from pathlib import Path
 from typing import Union
 
-import anthropic
 import yaml
+from openai import OpenAI
 
 from .renderer import circuit_to_svg
 
-# ---------------------------------------------------------------------------
-# System prompt (cached with prompt caching)
-# ---------------------------------------------------------------------------
 _SYSTEM_PROMPT = """\
 あなたは電気回路をYAML形式に変換する専門家です。
 臨床工学技士国家試験に出題される電気回路を対象とします。
@@ -137,31 +134,22 @@ YAMLコードブロック（```yaml ... ```）のみを返してください。�
 
 def nl_to_yaml(
     description: str,
-    client: anthropic.Anthropic | None = None,
+    client: OpenAI | None = None,
 ) -> dict:
     """Convert natural language circuit description to a circuit dict."""
     if client is None:
-        client = anthropic.Anthropic()
+        client = OpenAI()
 
-    response = client.messages.create(
-        model="claude-opus-4-7",
-        max_tokens=2048,
-        system=[
-            {
-                "type": "text",
-                "text": _SYSTEM_PROMPT,
-                "cache_control": {"type": "ephemeral"},
-            }
-        ],
+    response = client.chat.completions.create(
+        model="gpt-4o",
         messages=[
-            {
-                "role": "user",
-                "content": f"次の回路をYAMLで表現してください: {description}",
-            }
+            {"role": "system", "content": _SYSTEM_PROMPT},
+            {"role": "user", "content": f"次の回路をYAMLで表現してください: {description}"},
         ],
+        temperature=0,
     )
 
-    raw = response.content[0].text
+    raw = response.choices[0].message.content
     m = re.search(r"```(?:yaml)?\n(.*?)\n```", raw, re.DOTALL)
     yaml_str = m.group(1) if m else raw
     return yaml.safe_load(yaml_str)
@@ -170,7 +158,7 @@ def nl_to_yaml(
 def nl_to_svg(
     description: str,
     output_path: Union[str, Path, None] = None,
-    client: anthropic.Anthropic | None = None,
+    client: OpenAI | None = None,
 ) -> str:
     """One-shot: natural language → SVG string (optionally saved to file)."""
     data = nl_to_yaml(description, client)
