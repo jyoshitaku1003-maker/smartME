@@ -1,4 +1,18 @@
 import schemdraw.elements as elm
+from schemdraw.elements.elements import Element2Term, gap
+from schemdraw.elements.sources import batw, bat1, bat2
+from schemdraw.segments import Segment
+
+
+class BatteryCW(Element2Term):
+    """Single cell battery: negative(short) at start, positive(long) at end.
+    When direction=up, + is at top → clockwise conventional current."""
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.segments.append(Segment([(0, 0), gap, (batw, 0)]))
+        self.segments.append(Segment([(0, bat2), (0, -bat2)]))    # short = negative
+        self.segments.append(Segment([(batw, bat1), (batw, -bat1)]))  # long = positive
+
 
 # Maps YAML type names → schemdraw element classes
 ELEMENT_MAP: dict[str, type] = {
@@ -12,7 +26,7 @@ ELEMENT_MAP: dict[str, type] = {
     "source_dc":         elm.SourceV,
     "source_ac":         elm.SourceSin,
     "source_current":    elm.SourceI,
-    "battery":           elm.BatteryCell,
+    "battery":           BatteryCW,
 
     # 半導体
     "diode":             elm.Diode,
