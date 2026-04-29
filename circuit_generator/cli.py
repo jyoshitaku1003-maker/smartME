@@ -76,8 +76,9 @@ def symbol_sheet(output):
 
     # 単端子・特殊素子は別処理
     SINGLE_TERMINAL = {"ground", "ground_signal", "ground_chassis", "dot"}
-    SKIP = {"push", "pop", "line", "transformer",
-            "transistor_npn", "transistor_pnp", "jfet_n", "jfet_p"}
+    TRANSISTORS = {"transistor_npn", "transistor_pnp", "mosfet_n", "mosfet_p",
+                   "jfet_n", "jfet_p"}
+    SKIP = {"push", "pop", "line", "transformer"}
     keys = [k for k in sorted(ELEMENT_MAP) if k not in SKIP]
 
     cols = 3
@@ -93,7 +94,7 @@ def symbol_sheet(output):
             cls = ELEMENT_MAP[key]
             name_ja = ELEMENT_NAMES_JA.get(key, "")
             try:
-                if key == "opamp":
+                if key in TRANSISTORS or key == "opamp":
                     e = cls().right().at((x, y)).label(key, loc="top").label(name_ja, loc="bottom")
                     d.add(e)
                 elif key in SINGLE_TERMINAL:

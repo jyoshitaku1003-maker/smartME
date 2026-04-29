@@ -1,7 +1,7 @@
 import schemdraw.elements as elm
 from schemdraw.elements.elements import Element2Term, gap
 from schemdraw.elements.sources import batw, bat1, bat2
-from schemdraw.segments import Segment
+from schemdraw.segments import Segment, SegmentCircle
 
 
 class BatteryCW(Element2Term):
@@ -14,18 +14,21 @@ class BatteryCW(Element2Term):
         self.segments.append(Segment([(batw, bat1), (batw, -bat1)]))  # long = positive
 
 
-_tick = 0.2  # open-terminal tick length
+_r = 0.18   # open-circle radius
+_len = 3.0  # total element length
 
 
 class VoltageDiff(Element2Term):
-    """Voltage annotation: open terminals at each end with an arrow in between.
-    Positive terminal (arrowhead) at end, negative at start."""
+    """Voltage annotation: white open circles at each end with an arrow between them.
+    Arrow points toward positive terminal (end)."""
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.segments.append(Segment([(0, 0), (3.0, 0)],
+        # Arrow line between the two circles (with gap so it doesn't overlap circles)
+        self.segments.append(Segment([(_r, 0), (_len - _r, 0)],
                                      arrow='->', arrowwidth=0.18, arrowlength=0.3))
-        self.segments.append(Segment([(0, -_tick), (0, _tick)]))    # negative terminal tick
-        self.segments.append(Segment([(3.0, -_tick), (3.0, _tick)]))  # positive terminal tick
+        # Open circles at each terminal
+        self.segments.append(SegmentCircle((0, 0), _r, fill='white'))
+        self.segments.append(SegmentCircle((_len, 0), _r, fill='white'))
 
 
 # Maps YAML type names → schemdraw element classes
@@ -49,6 +52,8 @@ ELEMENT_MAP: dict[str, type] = {
     "photodiode":        elm.Photodiode,
     "transistor_npn":    elm.BjtNpn,
     "transistor_pnp":    elm.BjtPnp,
+    "mosfet_n":          elm.NMos,
+    "mosfet_p":          elm.PMos,
     "jfet_n":            elm.JFetN,
     "jfet_p":            elm.JFetP,
     "opamp":             elm.Opamp,
@@ -90,6 +95,8 @@ ELEMENT_NAMES_JA: dict[str, str] = {
     "photodiode":        "フォトダイオード",
     "transistor_npn":    "NPN バイポーラトランジスタ",
     "transistor_pnp":    "PNP バイポーラトランジスタ",
+    "mosfet_n":          "N チャネル MOSFET",
+    "mosfet_p":          "P チャネル MOSFET",
     "jfet_n":            "N チャネル JFET",
     "jfet_p":            "P チャネル JFET",
     "opamp":             "オペアンプ（演算増幅器）",
