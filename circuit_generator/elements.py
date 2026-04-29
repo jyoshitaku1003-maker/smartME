@@ -12,7 +12,7 @@ ELEMENT_MAP: dict[str, type] = {
     "source_dc":         elm.SourceV,
     "source_ac":         elm.SourceSin,
     "source_current":    elm.SourceI,
-    "battery":           elm.Battery,
+    "battery":           elm.BatteryCell,
 
     # 半導体
     "diode":             elm.Diode,
@@ -54,7 +54,7 @@ ELEMENT_NAMES_JA: dict[str, str] = {
     "source_dc":         "直流電圧源",
     "source_ac":         "交流電源（正弦波）",
     "source_current":    "電流源 (I)",
-    "battery":           "電池 (E)",
+    "battery":           "電池・単セル (E)",
     "diode":             "ダイオード (D)",
     "zener":             "ツェナーダイオード",
     "led":               "LED（発光ダイオード）",
