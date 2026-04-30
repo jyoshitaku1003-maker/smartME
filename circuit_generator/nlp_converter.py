@@ -163,14 +163,15 @@ circuit:
     direction: left
 ```
 
-## 例5: 反転増幅回路
+## オペアンプ描画のキールール
 
-オペアンプのアンカー位置（direction: right の場合）:
-- `in1` = 反転入力(−) 座標 (0, 0.625)
-- `in2` = 非反転入力(+) 座標 (0, -0.625)
-- `out` = 出力 座標 (3.415, 0)
-フィードバック経路は in1 から上方向に引き出し、out の真上を経由して out まで戻す。
-縦方向の長さ: in1 から上へ h → out上を通り → 下へ (h + 0.625) で out に到達。
+- `tox: [id, anchor]` — その素子のX座標まで自動で伸びる（手動計算不要）
+- `toy: [id, anchor]` — その素子のY座標まで自動で伸びる（手動計算不要）
+- `dot: true` — 素子の終点に接続点マークを付ける
+- `idot: true` — 素子の始点に接続点マークを付ける
+- フィードバック: in1(−)から上に引き出し → `tox` で out の真上まで延ばす → `toy` で out まで下ろす
+
+## 例5: 反転増幅回路
 
 ```yaml
 title: "反転増幅回路"
@@ -179,36 +180,15 @@ circuit:
     id: op1
     direction: right
   - type: line
-    id: out_junc
-    at: [op1, out]
-    direction: right
-    length: 1.585
-  - type: voltage_diff
-    label: "Vout"
+    at: [op1, in2]
     direction: down
-    length: 1.5
-  - type: line
-    direction: down
-    length: 0.5
+    length: 0.75
   - type: ground
-  - type: line
-    at: [out_junc, end]
-    direction: up
-    length: 2.0
-  - type: resistor
-    label: "R2"
-    direction: left
-    length: 5.0
-  - type: line
-    direction: down
-    length: 1.375
-  - type: dot
-    at: [op1, in1]
   - type: resistor
     label: "R1"
     at: [op1, in1]
     direction: left
-    length: 2.5
+    idot: true
   - type: voltage_diff
     label: "Vin"
     direction: down
@@ -217,8 +197,30 @@ circuit:
     direction: down
     length: 0.5
   - type: ground
+  - type: line
+    at: [op1, in1]
+    direction: up
+    length: 1.5
+  - type: resistor
+    label: "R2"
+    direction: right
+    tox: [op1, out]
+  - type: line
+    direction: down
+    toy: [op1, out]
+    dot: true
+  - type: line
+    at: [op1, out]
+    direction: right
+    length: 1.0
+  - type: voltage_diff
+    label: "Vout"
+    direction: down
+    length: 1.5
+  - type: line
+    direction: down
+    length: 0.5
   - type: ground
-    at: [op1, in2]
 ```
 
 ## 例6: 非反転増幅回路
@@ -230,28 +232,23 @@ circuit:
     id: op1
     direction: right
   - type: line
-    id: out_junc
+    id: out_line
     at: [op1, out]
     direction: right
-    length: 1.585
-  - type: voltage_diff
-    label: "Vout"
-    direction: down
-    length: 1.5
+    length: 1.0
   - type: line
-    direction: down
-    length: 0.5
-  - type: ground
-  - type: line
-    at: [out_junc, end]
+    at: [op1, in1]
     direction: up
-    length: 0.625
+    length: 1.5
+    dot: true
   - type: resistor
     label: "R2"
-    direction: left
-    length: 5.0
-  - type: dot
-    at: [op1, in1]
+    direction: right
+    tox: [op1, out]
+  - type: line
+    direction: down
+    toy: [op1, out]
+    dot: true
   - type: resistor
     label: "R1"
     at: [op1, in1]
@@ -264,6 +261,15 @@ circuit:
     length: 1.5
   - type: voltage_diff
     label: "Vin"
+    direction: down
+    length: 1.5
+  - type: line
+    direction: down
+    length: 0.5
+  - type: ground
+  - type: voltage_diff
+    at: [out_line, end]
+    label: "Vout"
     direction: down
     length: 1.5
   - type: line
@@ -281,10 +287,22 @@ circuit:
     id: op1
     direction: right
   - type: line
-    id: out_junc
-    at: [op1, out]
+    at: [op1, in1]
+    direction: up
+    length: 1.5
+  - type: resistor
+    label: "R2"
     direction: right
-    length: 1.585
+    tox: [op1, out]
+  - type: line
+    direction: down
+    toy: [op1, out]
+    dot: true
+  - type: line
+    at: [op1, out]
+    id: out_line
+    direction: right
+    length: 1.0
   - type: voltage_diff
     label: "Vout"
     direction: down
@@ -293,24 +311,11 @@ circuit:
     direction: down
     length: 0.5
   - type: ground
-  - type: line
-    at: [out_junc, end]
-    direction: up
-    length: 2.0
-  - type: resistor
-    label: "R2"
-    direction: left
-    length: 5.0
-  - type: line
-    direction: down
-    length: 1.375
-  - type: dot
-    at: [op1, in1]
   - type: resistor
     label: "R1"
     at: [op1, in1]
     direction: left
-    length: 2.5
+    idot: true
   - type: voltage_diff
     label: "V1"
     direction: down
@@ -319,13 +324,11 @@ circuit:
     direction: down
     length: 0.5
   - type: ground
-  - type: dot
-    at: [op1, in2]
   - type: resistor
     label: "R3"
     at: [op1, in2]
     direction: left
-    length: 2.5
+    idot: true
   - type: voltage_diff
     label: "V2"
     direction: down

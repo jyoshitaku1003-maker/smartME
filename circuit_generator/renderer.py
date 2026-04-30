@@ -13,7 +13,7 @@ from .elements import ELEMENT_MAP
 schemdraw.use("svg")
 
 
-def _build_element(item: dict):
+def _build_element(item: dict, named: dict):
     """Convert one YAML item dict into a configured schemdraw element."""
     elem_type = item["type"]
     cls = ELEMENT_MAP.get(elem_type)
@@ -31,12 +31,29 @@ def _build_element(item: dict):
     if "length" in item:
         e = e.length(float(item["length"]))
 
+    # tox/toy: extend element to the x/y coordinate of a named anchor
+    for field, method in (("tox", "tox"), ("toy", "toy")):
+        ref = item.get(field)
+        if ref and isinstance(ref, list) and len(ref) == 2:
+            ref_id, anchor = ref
+            ref_elem = named.get(ref_id)
+            if ref_elem is not None:
+                e = getattr(e, method)(getattr(ref_elem, anchor))
+            else:
+                warnings.warn(f"Unknown element id in {field}: {ref_id!r}")
+
     if "label" in item:
         loc = item.get("label_loc", "")
         e = e.label(item["label"], loc=loc) if loc else e.label(item["label"])
 
     if "value" in item:
         e = e.label(item["value"], loc=item.get("value_loc", "bottom"))
+
+    if item.get("idot"):
+        e = e.idot()
+
+    if item.get("dot"):
+        e = e.dot()
 
     return e
 
@@ -77,7 +94,7 @@ def circuit_to_svg(
             elif t not in ELEMENT_MAP:
                 continue
             else:
-                elem = _build_element(item)
+                elem = _build_element(item, named)
                 if elem is None:
                     continue
                 if at_point is not None:
