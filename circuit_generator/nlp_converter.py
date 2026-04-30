@@ -178,6 +178,32 @@ circuit:
   - type: opamp
     id: op1
     direction: right
+  - type: line
+    id: out_junc
+    at: [op1, out]
+    direction: right
+    length: 1.585
+  - type: voltage_diff
+    label: "Vout"
+    direction: down
+    length: 1.5
+  - type: line
+    direction: down
+    length: 0.5
+  - type: ground
+  - type: line
+    at: [out_junc, end]
+    direction: up
+    length: 2.0
+  - type: resistor
+    label: "R2"
+    direction: left
+    length: 5.0
+  - type: line
+    direction: down
+    length: 1.375
+  - type: dot
+    at: [op1, in1]
   - type: resistor
     label: "R1"
     at: [op1, in1]
@@ -191,28 +217,8 @@ circuit:
     direction: down
     length: 0.5
   - type: ground
-  - type: line
-    at: [op1, in1]
-    direction: up
-    length: 1.5
-  - type: resistor
-    label: "R2"
-    direction: right
-    length: 3.415
-  - type: line
-    direction: down
-    length: 2.125
   - type: ground
     at: [op1, in2]
-  - type: voltage_diff
-    label: "Vout"
-    at: [op1, out]
-    direction: down
-    length: 1.5
-  - type: line
-    direction: down
-    length: 0.5
-  - type: ground
 ```
 
 ## 例6: 非反転増幅回路
@@ -224,17 +230,28 @@ circuit:
     id: op1
     direction: right
   - type: line
-    at: [op1, in2]
-    direction: left
-    length: 1.5
+    id: out_junc
+    at: [op1, out]
+    direction: right
+    length: 1.585
   - type: voltage_diff
-    label: "Vin"
+    label: "Vout"
     direction: down
     length: 1.5
   - type: line
     direction: down
     length: 0.5
   - type: ground
+  - type: line
+    at: [out_junc, end]
+    direction: up
+    length: 0.625
+  - type: resistor
+    label: "R2"
+    direction: left
+    length: 5.0
+  - type: dot
+    at: [op1, in1]
   - type: resistor
     label: "R1"
     at: [op1, in1]
@@ -242,19 +259,11 @@ circuit:
     length: 1.5
   - type: ground
   - type: line
-    at: [op1, in1]
-    direction: up
-    length: 0.625
-  - type: resistor
-    label: "R2"
-    direction: right
-    length: 3.415
-  - type: line
-    direction: down
-    length: 0.625
+    at: [op1, in2]
+    direction: left
+    length: 1.5
   - type: voltage_diff
-    label: "Vout"
-    at: [op1, out]
+    label: "Vin"
     direction: down
     length: 1.5
   - type: line
@@ -271,6 +280,32 @@ circuit:
   - type: opamp
     id: op1
     direction: right
+  - type: line
+    id: out_junc
+    at: [op1, out]
+    direction: right
+    length: 1.585
+  - type: voltage_diff
+    label: "Vout"
+    direction: down
+    length: 1.5
+  - type: line
+    direction: down
+    length: 0.5
+  - type: ground
+  - type: line
+    at: [out_junc, end]
+    direction: up
+    length: 2.0
+  - type: resistor
+    label: "R2"
+    direction: left
+    length: 5.0
+  - type: line
+    direction: down
+    length: 1.375
+  - type: dot
+    at: [op1, in1]
   - type: resistor
     label: "R1"
     at: [op1, in1]
@@ -284,6 +319,8 @@ circuit:
     direction: down
     length: 0.5
   - type: ground
+  - type: dot
+    at: [op1, in2]
   - type: resistor
     label: "R3"
     at: [op1, in2]
@@ -303,28 +340,6 @@ circuit:
     direction: down
     length: 1.5
   - type: ground
-  - type: line
-    at: [op1, in1]
-    direction: up
-    length: 1.5
-  - type: resistor
-    label: "R2"
-    direction: right
-    length: 3.415
-  - type: line
-    direction: down
-    length: 2.125
-  - type: voltage_diff
-    label: "Vout"
-    at: [op1, out]
-    direction: down
-    length: 1.5
-  - type: line
-    direction: down
-    length: 0.5
-  - type: ground
-```
-    length: 1.5
 ```
 
 YAMLコードブロック（```yaml ... ```）のみを返してください。説明文は不要です。\

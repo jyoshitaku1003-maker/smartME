@@ -57,28 +57,33 @@ def circuit_to_svg(
             elif t == "pop":
                 d.pop()
                 continue
-            elif t == "dot":
-                added = d.add(elm.Dot())
+
+            # Resolve at: [id, anchor] for positioning
+            at = item.get("at")
+            at_point = None
+            if at and isinstance(at, list) and len(at) == 2:
+                ref_id, anchor = at
+                ref_elem = named.get(ref_id)
+                if ref_elem is not None:
+                    at_point = getattr(ref_elem, anchor)
+                else:
+                    warnings.warn(f"Unknown element id: {ref_id!r}")
+
+            if t == "dot":
+                dot = elm.Dot()
+                if at_point is not None:
+                    dot = dot.at(at_point)
+                added = d.add(dot)
             elif t not in ELEMENT_MAP:
                 continue
             else:
                 elem = _build_element(item)
                 if elem is None:
                     continue
-
-                # at: [element_id, anchor] — start this element from a named anchor
-                at = item.get("at")
-                if at and isinstance(at, list) and len(at) == 2:
-                    ref_id, anchor = at
-                    ref_elem = named.get(ref_id)
-                    if ref_elem is not None:
-                        elem = elem.at(getattr(ref_elem, anchor))
-                    else:
-                        warnings.warn(f"Unknown element id: {ref_id!r}")
-
+                if at_point is not None:
+                    elem = elem.at(at_point)
                 added = d.add(elem)
 
-            # Register named elements
             elem_id = item.get("id")
             if elem_id:
                 named[elem_id] = added
